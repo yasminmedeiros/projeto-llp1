@@ -21,8 +21,15 @@ typedef struct{
     char titulo[100], tipo[100];
 }informacoest;
 
+typedef struct {
+    geral ap;
+    char titulo[100], tipo[100];
+    int numquart, numpav, areaAp;
+}informacoesa;
+
 informacoesc cadcasa[1000];
 informacoest cadterreno[1000];
+informacoesa cadap[1000];
 
 int iTerreno = 0;
 int iCasa=0;
@@ -97,7 +104,7 @@ void CadastroTerreno(int iTerreno){
     printf("�rea do Terreno: ");
     scanf("%d%*c", &cadterreno[iTerreno].area);
     printf("�rea do Terreno: ");
-    scanf("%d%*c", &cadterreno[iTerreno].geral.valor);
+    scanf("%f%*c", &cadterreno[iTerreno].geral.valor);
     printf("Título: ");
     fgets(cadterreno[iTerreno].titulo, 100, stdin);
     printf("Tipo de imovel: [aluguel / venda] ");
@@ -152,6 +159,33 @@ void TituloCasa(int i){
             CaracteristicasCasa(j);
         }
     }
+}
+void CadastroApartamento(int iApartamento){
+    printf("\t\tCADASTRO DE APARTAMENTO(S)\n");
+
+    printf("Nome da rua: ");
+    fgets(cadap[iApartamento].ap.nomerua, 100, stdin);
+    printf("Numero: ");
+    scanf("%i%*c", &cadap[iApartamento].ap.numero);
+    printf("Bairro: ");
+    fgets(cadap[iApartamento].ap.bairro, 100, stdin);
+    printf("Cidade: ");
+    fgets(cadap[iApartamento].ap.cidade, 100, stdin);
+    printf("CEP: ");
+    fgets(cadap[iApartamento].ap.cep, 15, stdin);
+    printf("Quantidade de quartos: ");
+    scanf("%i%*c", &cadap[iApartamento].numquart);
+    printf("Quantidade de pavimentos: ");
+    scanf("%i%*c", &cadap[iApartamento].numpav);
+    printf("Area: ");
+    scanf("%i%*c", &cadap[iApartamento].areaAp);
+    printf("Digite o preço: ");
+    scanf("%f%*c", &cadap[iApartamento].ap.valor);
+    printf("Digite o titulo: ");
+    fgets(cadap[iApartamento].titulo, 100, stdin);
+    printf("Tipo de imovel: [aluguel / venda]");
+    fgets(cadap[iApartamento].tipo, 100, stdin);
+
 }
 void TituloApartamento(int i){
     char titulo1[100];
