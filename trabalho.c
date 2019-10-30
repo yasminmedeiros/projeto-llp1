@@ -168,7 +168,7 @@ void TituloTerreno(int i){
     printf("\n");
 
     for (int i=0;i<100;i++){
-        if(strcmp(titulo1, cadterreno[i].) == 0){
+        if(strcmp(titulo1, cadterreno[i].titulo) == 0){
         }
     }
 }
