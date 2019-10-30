@@ -5,7 +5,7 @@
 
 typedef struct{
     char nomerua[100], bairro[100], cidade[100], cep[15];
-    int numero; 
+    int numero;
     float valor;
 }geral;
 
@@ -13,7 +13,7 @@ typedef struct {
     geral casa;
     char titulo[100], tipo[100];
     int numquart, numpav, areat, areac;
-} informacoesc;
+}informacoesc;
 
 typedef struct{
     geral geral;
@@ -28,7 +28,7 @@ int iTerreno = 0;
 int iCasa=0;
 void CaracteristicasTerreno(int iTerreno){
         printf("Nome da rua: ");
-        printf("%s",cadterreno[iTerreno].geral.nomeDaRua);
+        printf("%s",cadterreno[iTerreno].geral.nomerua);
         printf("Nome do bairro: ");
         printf("%s", cadterreno[iTerreno].geral.bairro);
         printf("Nome da cidade: ");
@@ -48,7 +48,7 @@ void CaracteristicasTerreno(int iTerreno){
         printf("\n");
         printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
         printf("\n");
-        
+
 }
 
 void CaracteristicasCasa(int iCasa){
@@ -73,7 +73,7 @@ void CaracteristicasCasa(int iCasa){
         printf("Ti'tulo: ");
         printf("%s", cadcasa[iCasa].titulo);
         printf("Valor: ");
-        printf("%.2f\n", cadcasa[iCasa].geral.valor);
+        printf("%.2f\n", cadcasa[iCasa].casa.valor);
         printf("Tipo de imovel: ");
         printf("%s",cadcasa[iCasa].tipo);
         printf("\n");
@@ -85,19 +85,24 @@ void CadastroTerreno(int iTerreno){
     printf("\t\tCADASTRO DE TERRENO(S)\n");
 
     printf("Nome da cidade: ");
-    fgets(terreno[iTerreno].geral.cidade, 100, stdin);
+    fgets(cadterreno[iTerreno].geral.cidade, 100, stdin);
     printf("N�mero do CEP: ");
-    fgets(terreno[iTerreno].geral.cep, 100, stdin);
+    fgets(cadterreno[iTerreno].geral.cep, 100, stdin);
     printf("Nome do bairro: ");
-    fgets(terreno[iTerreno].geral.bairro, 100, stdin);
+    fgets(cadterreno[iTerreno].geral.bairro, 100, stdin);
     printf("Nome da rua: ");
-    fgets(terreno[iTerreno].geral.nomeDaRua, 100, stdin);
+    fgets(cadterreno[iTerreno].geral.nomerua, 100, stdin);
     printf("N�mero da terreno: ");
-    scanf("%d%*c", &terreno[iTerreno].geral.numero);
+    scanf("%d%*c", &cadterreno[iTerreno].geral.numero);
     printf("�rea do Terreno: ");
-    scanf("%d%*c", &terreno[iTerreno].area);
+    scanf("%d%*c", &cadterreno[iTerreno].area);
     printf("�rea do Terreno: ");
-    scanf("%d%*c", &terreno[iTerreno].geral.valor);
+    scanf("%d%*c", &cadterreno[iTerreno].geral.valor);
+    printf("Título: ");
+    fgets(cadterreno[iTerreno].titulo, 100, stdin);
+    printf("Tipo de imovel: [aluguel / venda] ");
+    fgets(cadterreno[iTerreno].tipo, 100, stdin);
+    cadterreno[iTerreno].tipo[strlen(cadterreno[iTerreno].tipo)-1] = '\0';
     iTerreno++;
 }
 
@@ -127,7 +132,7 @@ void CadastroCasa(int iCasa){
     printf("Ti'tulo: ");
     fgets(cadcasa[iCasa].titulo, 100, stdin);
     printf("Valor: ");
-    scanf("%f%*c", &cadcasa[iCasa].geral.valor);
+    scanf("%f%*c", &cadcasa[iCasa].casa.valor);
     printf("Tipo de imovel: [aluguel / venda] ");
     fgets(cadcasa[iCasa].tipo, 100, stdin);
     cadcasa[iCasa].tipo[strlen(cadcasa[iCasa].tipo)-1] = '\0';
@@ -161,9 +166,9 @@ void TituloTerreno(int i){
     printf("Digite o titulo do imovel que deseja procurar: ");
     fgets(titulo1, 100, stdin);
     printf("\n");
-    
+
     for (int i=0;i<100;i++){
-        if(strcmp(titulo1, terreno[i].) == 0){
+        if(strcmp(titulo1, cadterreno[i].) == 0){
         }
     }
 }
@@ -220,6 +225,6 @@ void BuscarVenda(int i){
 }
 int main(){
     setlocale(LC_ALL, "Portuguese");
-    
+
     return 0;
 }
