@@ -146,6 +146,62 @@ void CadastroCasa(int iCasa){
     iCasa++;
     printf("\e[H\e[2J");
 }
+void ImoveisAluguel(informacoesc cadcasa[], informacoest cadterreno[], informacoesa cadap[]){
+    printf("Imoveis Disponíveis para Alugar: \n");
+    printf("\tTerrenos Disponíveis para Alugar: \n");
+    for (int i=0;i<1000;i++){
+        if(cadterreno[i].tipo=="Aluguel"){
+            CaracteristicasTerreno(i);
+            printf("/n");
+        }
+    }
+    printf("\tCasas Disponíveis para Alugar: \n");
+    for (int i=0;i<1000;i++){
+        if(cadcasa[i].tipo=="Aluguel"){
+            CaracteristicasCasa(i);
+            printf("/n");
+        }
+    }
+    printf("\t Apartamentos Disponíveis para Alugar: \n");
+    for (int i=0;i<1000;i++){
+        if(cadap[i].tipo=="Aluguel"){
+            CaracteristicasApartamento(i);
+            printf("/n");
+        }
+    }
+}
+void BuscaBairro (informacoesc cadcasa[], informacoest cadterreno[], informacoesa cadap[]) {
+    char bairro[100];
+    printf("Digite o titulo do imovel que deseja procurar: ");
+    fgets(bairro, 100, stdin);
+    ///// RAISSAAAAAAAAA cadcasa[iCasa].tipo[strlen(cadcasa[iCasa].tipo)-1] = '\0';
+
+    printf("/nTerrenos Encontrados Neste Bairro: /n");
+
+    for (int i=0;i<1000;i++){
+        if(strcmp(bairro, cadterreno[i].geral.bairro) == 0){
+            CaracteristicasTerreno(i);
+            printf("/n");
+        }
+    }
+    printf("/nCasas Encontradas Neste Bairro: /n");
+
+    for (int i=0;i<1000;i++){
+        if(strcmp(bairro, cadcasa[i].geral.bairro) == 0){
+            CaracteristicasCasa(i);
+            printf("/n");
+        }
+    }
+    printf("/nTerrenos Encontrados Neste Bairro: /n");
+
+    for (int i=0;i<1000;i++){
+        if(strcmp(bairro, cadap[i].geral.bairro) == 0){
+            CaracteristicasApartamento(i);
+            printf("/n");
+        }
+    }
+
+}
 void TituloCasa(int i){
 
     char titulo1[100];
