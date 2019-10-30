@@ -146,7 +146,7 @@ void CadastroCasa(int iCasa){
     iCasa++;
     printf("\e[H\e[2J");
 }
-void ImoveisAluguel(informacoesc cadcasa[], informacoest cadterreno[], informacoesa cadap[]){
+void ImoveisAluguel(const informacoesc cadcasa[], const informacoest cadterreno[], const informacoesa cadap[]){
     printf("Imoveis Disponíveis para Alugar: \n");
     printf("\tTerrenos Disponíveis para Alugar: \n");
     for (int i=0;i<1000;i++){
@@ -170,7 +170,7 @@ void ImoveisAluguel(informacoesc cadcasa[], informacoest cadterreno[], informaco
         }
     }
 }
-void BuscaBairro (informacoesc cadcasa[], informacoest cadterreno[], informacoesa cadap[]) {
+void BuscaBairro (const informacoesc cadcasa[], const informacoest cadterreno[], const  informacoesa cadap[]) {
     char bairro[100];
     printf("Digite o titulo do imovel que deseja procurar: ");
     fgets(bairro, 100, stdin);
@@ -312,6 +312,27 @@ void BuscarVenda(int i){
     }else{
         //VendaTerreno(i);
     }
+}
+void RemoverTerreno( const informacoest cadterreno[]) {
+    printf("Lista de Terrenos/n")
+    for(int i=0;i<=iTerreno;i++){
+        printf("\nTerreno %d:", i+1),
+        CaracteristicasTerreno(i);
+    }
+    int j;
+    printf("Digite o índice do terreno que deseja remover: ");
+    scanf("%d", j);
+    j--;
+    for( ; j<iTerreno;j++){
+        cadterreno[j] = cadterreno[j+1];
+    }
+    iTerreno--;
+}
+void RemoverCasa(const informacoesc cadcasa[]) {
+
+}
+void RemoverAp(const informacoesc cadap[]) {
+
 }
 int main(){
     setlocale(LC_ALL, "Portuguese");
