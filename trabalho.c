@@ -1,19 +1,81 @@
 #include <stdio.h>
 #include <string.h>
+#include <locale.h>
+#include <stdlib.h>
 
 typedef struct{
     char nomerua[100], bairro[100], cidade[100], cep[15];
-    int numero;
+    int numero; 
+    float valor;
 }geral;
 
 typedef struct {
     geral casa;
     char titulo[100], tipo[100];
-    int numpav, areat, areac;
-    float valor;
+    int numquart, numpav, areat, areac;
 } informacoesc;
 
+typedef struct{
+    geral geral;
+    int area;
+}informacoest;
+
 informacoesc cadcasa[1000];
+informacoest cadterreno[1000];
+
+void CaracteristicasTerreno(int i){
+        printf("Nome da rua: ");
+        printf("%s",cadterreno[i].geral.nomeDaRua);
+        printf("Nome do bairro: ");
+        printf("%s", cadterreno[i].geral.bairro);
+        printf("Nome da cidade: ");
+        printf("%s", cadterreno[i].geral.cidade);
+        printf("CEP: ");
+        printf("%s", cadterreno[i].geral.cep);
+        printf("Número: ");
+        printf("%d\n", cadterreno[i].geral.numero);
+        printf("Área do terreno: ");
+        printf("%d\n", cadterreno[i].area);
+        printf("Ti'tulo: ");
+        printf("%s", cadterreno[i].titulo);
+        printf("Valor: ");
+        printf("%.2f\n", cadterreno[i].valor);
+        printf("Tipo de imovel: Terreno");
+        printf("\n");
+        printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+        printf("\n");
+        
+}
+
+void CaracteristicasCasa(int j){
+        printf("Nome da rua: ");
+        printf("%s", cadcasa[j].casa.nomerua);
+        printf("Nome do bairro: ");
+        printf("%s", cadcasa[j].casa.bairro);
+        printf("Nome da cidade: ");
+        printf("%s", cadcasa[j].casa.cidade);
+        printf("CEP: ");
+        printf("%s", cadcasa[j].casa.cep);
+        printf("Nu'mero: ");
+        printf("%d\n", cadcasa[j].casa.numero);
+        printf("Nu'mero de pavimentos: ");
+        printf("%d\n", cadcasa[j].numpav);
+        printf("Nu'mero de quartos: ");
+        printf("%d", cadcasa[j].numquart);
+        printf("Area do terreno: ");
+        printf("%d\n", cadcasa[j].areat);
+        printf("Area construida: ");
+        printf("%d\n", cadcasa[j].areac);
+        printf("Ti'tulo: ");
+        printf("%s", cadcasa[j].titulo);
+        printf("Valor: ");
+        printf("%.2f\n", cadcasa[j].geral.valor);
+        printf("Tipo de imovel: ");
+        printf("%s",cadcasa[j].tipo);
+        printf("\n");
+        printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+        printf("\n");
+}
 
 
 void CadastroCasa(int i){
@@ -32,6 +94,8 @@ void CadastroCasa(int i){
     scanf("%d", &cadcasa[i].casa.numero);
     printf("Nu'mero de pavimentos: ");
     scanf("%d", &cadcasa[i].numpav);
+    printf("Nu'mero de quartos: ");
+    scanf("%d", &cadcasa[i].numquart);
     printf("Area do terreno: ");
     scanf("%d", &cadcasa[i].areat);
     printf("Area construida: ");
@@ -39,7 +103,7 @@ void CadastroCasa(int i){
     printf("Ti'tulo: ");
     fgets(cadcasa[i].titulo, 100, stdin);
     printf("Valor: ");
-    scanf("%f%*c", &cadcasa[i].valor);
+    scanf("%f%*c", &cadcasa[i].geral.valor);
     printf("Tipo de imovel: [aluguel / venda] ");
     fgets(cadcasa[i].tipo, 100, stdin);
     cadcasa[i].tipo[strlen(cadcasa[i].tipo)-1] = '\0';
@@ -56,33 +120,8 @@ void TituloCasa(int i){
     printf("\n");
 
     for(int j=0; j<=i; j++){
-
         if(strcmp(titulo1, cadcasa[j].titulo) == 0){
-            printf("Nome da rua: ");
-            printf("%s", cadcasa[j].casa.nomerua);
-            printf("Nome do bairro: ");
-            printf("%s", cadcasa[j].casa.bairro);
-            printf("Nome da cidade: ");
-            printf("%s", cadcasa[j].casa.cidade);
-            printf("CEP: ");
-            printf("%s", cadcasa[j].casa.cep);
-            printf("Nu'mero: ");
-            printf("%d\n", cadcasa[j].casa.numero);
-            printf("Nu'mero de pavimentos: ");
-            printf("%d\n", cadcasa[j].numpav);
-            printf("Area do terreno: ");
-            printf("%d\n", cadcasa[j].areat);
-            printf("Area construida: ");
-            printf("%d\n", cadcasa[j].areac);
-            printf("Ti'tulo: ");
-            printf("%s", cadcasa[j].titulo);
-            printf("Valor: ");
-            printf("%.2f\n", cadcasa[i].valor);
-            printf("Tipo de imovel: ");
-            printf("%s",cadcasa[i].tipo);
-            printf("\n");
-            printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-            printf("\n");
+            CaracteristicasCasa(j);
         }
     }
 }
@@ -99,6 +138,11 @@ void TituloTerreno(int i){
     printf("Digite o titulo do imovel que deseja procurar: ");
     fgets(titulo1, 100, stdin);
     printf("\n");
+    
+    for (int i=0;i<100;i++){
+        if(strcmp(titulo1, terreno[i].) == 0){
+        }
+    }
 }
 void BuscarTitulo(int i){
     char titulo1[100];
@@ -126,31 +170,8 @@ void VendaCasa(int i){
     for(int j=0; j<=i; j++){
 
         if(strcmp("venda", cadcasa[j].tipo) == 0){
-            printf("Nome da rua: ");
-            printf("%s", cadcasa[j].casa.nomerua);
-            printf("Nome do bairro: ");
-            printf("%s", cadcasa[j].casa.bairro);
-            printf("Nome da cidade: ");
-            printf("%s", cadcasa[j].casa.cidade);
-            printf("CEP: ");
-            printf("%s", cadcasa[j].casa.cep);
-            printf("Nu'mero: ");
-            printf("%d\n", cadcasa[j].casa.numero);
-            printf("Nu'mero de pavimentos: ");
-            printf("%d\n", cadcasa[j].numpav);
-            printf("Area do terreno: ");
-            printf("%d\n", cadcasa[j].areat);
-            printf("Area construida: ");
-            printf("%d\n", cadcasa[j].areac);
-            printf("Ti'tulo: ");
-            printf("%s", cadcasa[j].titulo);
-            printf("Valor: ");
-            printf("%.2f\n", cadcasa[i].valor);
-            printf("Tipo de imovel: ");
-            printf("%s",cadcasa[i].tipo);
-            printf("\n");
-            printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-            printf("\n");
+            CaracteristicasCasa(j);
+
         }
     }
 }
@@ -175,7 +196,8 @@ void BuscarVenda(int i){
     }
 }
 int main(){
-    int i=0, resposta = 1;
+    setlocale(LC_ALL, "Portuguese");
+    int i=0, resposta = 1, resposta2;
     char titulo1[100];
 
     // Cadastro de casas
@@ -197,8 +219,13 @@ int main(){
 
     printf("\e[H\e[2J");
 
-    //BuscarTitulo(i);
-    BuscarVenda(i);
+    printf("Buscar por: \n\t[1]titulo\n\t[2]para venda\n");
+    scanf("%d", &resposta2);
+
+    if (resposta2 == 1)
+        BuscarTitulo(i);
+    else
+        BuscarVenda(i);
 
     return 0;
 }
