@@ -33,6 +33,7 @@ informacoesa cadap[1000];
 
 int iTerreno = 0;
 int iCasa=0;
+int iApartamento=0;
 void CaracteristicasTerreno(int iTerreno){
         printf("Nome da rua: ");
         printf("%s",cadterreno[iTerreno].geral.nomerua);
@@ -329,9 +330,34 @@ void RemoverTerreno( const informacoest cadterreno[]) {
     iTerreno--;
 }
 void RemoverCasa(const informacoesc cadcasa[]) {
-
+    printf("Lista de Casas/n")
+    for(int i=0;i<=iCasa;i++){
+        printf("\nCasa %d:", i+1),
+        CaracteristicasCasa(i);
+    }
+    int j;
+    printf("Digite o índice do terreno que deseja remover: ");
+    scanf("%d", j);
+    j--;
+    for( ; j<iCasa;j++){
+        cadcasa[j] = cadcasa[j+1];
+    }
+    iCasa--;
 }
 void RemoverAp(const informacoesc cadap[]) {
+    printf("Lista de Apartamentos/n")
+    for(int i=0;i<=iApartamento;i++){
+        printf("\nApartamento %d:", i+1),
+        CaracteristicasApartamento(i);
+    }
+    int j;
+    printf("Digite o índice do terreno que deseja remover: ");
+    scanf("%d", j);
+    j--;
+    for( ; j<iApartamento;j++){
+        cadap[j] = cadap[j+1];
+    }
+    iApartamento--;
 
 }
 int main(){
