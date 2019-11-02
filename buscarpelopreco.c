@@ -12,7 +12,7 @@ printf("\n");
     for(i = 0; i <= iApartamento; i++){
 
         if(cadap[i].ap.valor  > precoParaBuscar){
-            CaracteristicasApartamento();
+            CaracteristicasApartamento(i);
         }
     }
 }
@@ -29,7 +29,7 @@ printf("\n");
     for(i = 0; i <= iCasa; i++){
 
         if(cadcasa[i].casa.valor > precoParaBuscar){
-            CaracteristicasCasa();
+            CaracteristicasCasa(i);
         }
     }
 }
@@ -46,7 +46,7 @@ printf("\n");
     for(i = 0; i <= iTerreno; i++){
 
         if(cadterreno[i].geral.valor > precoParaBuscar){
-            CaracteristicasTerreno();
+            CaracteristicasTerreno(i);
         }
     }
 }
