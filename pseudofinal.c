@@ -174,11 +174,8 @@ void LerTerrenoArquivo(){
             fscanf(fp, "%s\n", cadterreno[iTerreno].geral.bairro);
             fscanf(fp, "%s\n", cadterreno[iTerreno].geral.cidade);
             fscanf(fp, "%s\n", cadterreno[iTerreno].geral.cep);
-            fscanf(fp, "%d\n", cadterreno[iTerreno].numquart);
-            fscanf(fp, "%d\n", cadterreno[iTerreno].numpav);
             fscanf(fp, "%d\n", cadterreno[iTerreno].area);
             fscanf(fp, "%f\n", cadterreno[iTerreno].geral.valor);
-            fscanf(fp, "%s\n", cadterreno[iTerreno].titulo);
             fscanf(fp, "%s\n", cadterreno[iTerreno].tipo);
         }
     }
@@ -200,18 +197,19 @@ void LerCasaArquivo(){
         if(feof(fp)){
             break;
         }
-        if(cadap[iCasa].casa.nomerua!='\0'){
-            fscanf(fp, "%s\n", cadap[iCasa].casa.nomerua);
-            fscanf(fp, "%d\n", cadap[iCasa].casa.numero);
-            fscanf(fp, "%s\n", cadap[iCasa].casa.bairro);
-            fscanf(fp, "%s\n", cadap[iCasa].casa.cidade);
-            fscanf(fp, "%s\n", cadap[iCasa].casa.cep);
-            fscanf(fp, "%d\n", cadap[iCasa].numquart);
-            fscanf(fp, "%d\n", cadap[iCasa].numpav);
-            fscanf(fp, "%d\n", cadap[iCasa].areaAp);
-            fscanf(fp, "%f\n", cadap[iCasa].casa.valor);
-            fscanf(fp, "%s\n", cadap[iCasa].titulo);
-            fscanf(fp, "%s\n", cadap[iCasa].tipo);
+        if(cadcasa[iCasa].casa.nomerua!='\0'){
+            fscanf(fp, "%s\n", cadcasa[iCasa].casa.nomerua);
+            fscanf(fp, "%s\n", cadcasa[iCasa].casa.bairro);
+            fscanf(fp, "%s\n", cadcasa[iCasa].casa.cidade);
+            fscanf(fp, "%s\n", cadcasa[iCasa].casa.cep);
+            fscanf(fp, "%d\n", cadcasa[iCasa].casa.numero);
+            fscanf(fp, "%d\n", cadcasa[iCasa].numpav);
+            fscanf(fp, "%d\n", cadcasa[iCasa].numquart);
+            fscanf(fp, "%d\n", cadcasa[iCasa].areat);
+            fscanf(fp, "%d\n", cadcasa[iCasa].areac);
+            fscanf(fp, "%s\n", cadcasa[iCasa].titulo);
+            fscanf(fp, "%.2f\n", cadcasa[iCasa].casa.valor);
+            fscanf(fp, "%s",cadcasa[iCasa].tipo);
         }
     }
 
@@ -266,7 +264,6 @@ void CaracteristicasCasa(int iCasa){
     printf("Valor: ");
     printf("%.2f\n", cadcasa[iCasa].casa.valor);
     printf("Tipo de imovel: ");
-    printf("%s",cadcasa[iCasa].tipo);
     printf("\n");
     printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     printf("\n");
@@ -276,7 +273,7 @@ void CaracteristicasApartamento(int iApartamento){
     printf("Nome da rua: ");
     printf("%s", cadap[iApartamento].ap.nomerua);
     printf("Numero: ");
-    printf("%d", cadap[iApartamento].ap.numero);
+    printf("%d\n", cadap[iApartamento].ap.numero);
     printf("Bairro: ");
     printf("%s", cadap[iApartamento].ap.bairro);
     printf("Cidade: ");
@@ -284,13 +281,13 @@ void CaracteristicasApartamento(int iApartamento){
     printf("CEP: ");
     printf("%s", cadap[iApartamento].ap.cep);
     printf("Quantidade de quartos: ");
-    printf("%d", cadap[iApartamento].numquart);
+    printf("%d\n", cadap[iApartamento].numquart);
     printf("Quantidade de pavimentos: ");
-    printf("%d", cadap[iApartamento].numpav);
+    printf("%d\n", cadap[iApartamento].numpav);
     printf("Area: ");
-    printf("%d", cadap[iApartamento].areaAp);
+    printf("%d\n", cadap[iApartamento].areaAp);
     printf("Preço: ");
-    printf("%f", cadap[iApartamento].ap.valor);
+    printf("%f\n", cadap[iApartamento].ap.valor);
     printf("Titulo: ");
     printf("%s", cadap[iApartamento].titulo);
     printf("Tipo de imovel: [aluguel / venda]");
@@ -326,7 +323,7 @@ void VendaCasa(){
 
 void AlugaTerreno(){
     for(int j=0; j<=iTerreno; j++){
-        if(strcmp("aluga", cadterreno[j].tipo) == 0){
+        if(strcmp("aluguel", cadterreno[j].tipo) == 0){
             CaracteristicasTerreno(j);
         }
     }
@@ -335,7 +332,7 @@ void AlugaTerreno(){
 
 void AlugaApartamento(){
     for(int j=0; j<=iApartamento; j++){
-        if(strcmp("aluga", cadap[j].tipo) == 0){
+        if(strcmp("aluguel", cadap[j].tipo) == 0){
             CaracteristicasApartamento(j);
         }
     }
@@ -344,7 +341,7 @@ void AlugaApartamento(){
 
 void AlugaCasa(){
     for(int j=0; j<=iCasa; j++){
-        if(strcmp("aluga", cadcasa[j].tipo) == 0){
+        if(strcmp("aluguel", cadcasa[j].tipo) == 0){
             CaracteristicasCasa(j);
         }
     }
@@ -449,53 +446,84 @@ void BairroTerreno(){
 
 void BuscarPeloPrecoAp(){
 
-float precoParaBuscar;
-int i;
+    float precoParaBuscar;
+    int i;
 
-printf("Digite o valor a ser buscado: ");
-scanf("%f", &precoParaBuscar);
-printf("\n");
+    printf("Digite o valor a ser buscado: ");
+    scanf("%f", &precoParaBuscar);
+    printf("\n");
 
-    for(i = 0; i <= iApartamento; i++){
+        for(i = 0; i <= iApartamento; i++){
 
-        if(cadap[i].ap.valor  > precoParaBuscar){
-            CaracteristicasApartamento(i);
+            if(cadap[i].ap.valor  >= precoParaBuscar){
+                CaracteristicasApartamento(i);
+            }
         }
-    }
+
+        RepetirOperacao();
 }
 
 void BuscarPeloPrecoCasa(){
 
-float precoParaBuscar;
-int i;
+    float precoParaBuscar;
+    int i;
 
-printf("Digite o valor a ser buscado: ");
-scanf("%f", &precoParaBuscar);
-printf("\n");
+    printf("Digite o valor a ser buscado: ");
+    scanf("%f", &precoParaBuscar);
+    printf("\n");
 
-    for(i = 0; i <= iCasa; i++){
+        for(i = 0; i <= iCasa; i++){
 
-        if(cadcasa[i].casa.valor > precoParaBuscar){
-            CaracteristicasCasa(i);
+            if(cadcasa[i].casa.valor >= precoParaBuscar){
+                CaracteristicasCasa(i);
+            }
         }
-    }
+        RepetirOperacao();
 }
 
 void BuscarPeloPrecoTerreno(){
 
-float precoParaBuscar;
-int i;
+    float precoParaBuscar;
+    int i;
 
-printf("Digite o valor a ser buscado: ");
-scanf("%f", &precoParaBuscar);
-printf("\n");
+    printf("Digite o valor a ser buscado: ");
+    scanf("%f", &precoParaBuscar);
+    printf("\n");
+
+        for(i = 0; i <= iTerreno; i++){
+
+            if(cadterreno[i].geral.valor >= precoParaBuscar){
+                CaracteristicasTerreno(i);
+            }
+        }
+    RepetirOperacao();
+}
+
+void ListarImoveisAp(){
+    int i;
+
+    for(i = 0; i <= iApartamento; i++){
+        CaracteristicasApartamento(i);
+    }
+    RepetirOperacao();
+}
+
+void ListarImoveisCasa(){
+    int i;
+
+    for(i = 0; i <= iCasa; i++){
+        CaracteristicasCasa(i);
+    }
+    RepetirOperacao();
+}
+
+void ListarImoveisTerreno(){
+    int i;
 
     for(i = 0; i <= iTerreno; i++){
-
-        if(cadterreno[i].geral.valor > precoParaBuscar){
-            CaracteristicasTerreno(i);
-        }
+        CaracteristicasTerreno(i);
     }
+    RepetirOperacao();
 }
 
 void RemoverTerreno( informacoest cadterreno[]) {
@@ -693,9 +721,9 @@ void CadastroApartamento(){
     scanf("%f%*c", &cadap[iApartamento].ap.valor);
     printf("Digite o titulo: ");
     fgets(cadap[iApartamento].titulo, 100, stdin);
-    printf("Tipo de imovel: [aluguel / venda]");
-    cadcasa[iApartamento].tipo[strlen(cadap[iCasa].tipo)-1] = '\0';
+    printf("Tipo de imovel: [aluguel / venda] ");
     fgets(cadap[iApartamento].tipo, 100, stdin);
+    cadap[iApartamento].tipo[strlen(cadap[iApartamento].tipo)-1] = '\0';
     iApartamento++;
     limparTela;
     RepetirOperacao();
@@ -730,9 +758,10 @@ void menuPrincipal(){
         printf(" %s Buscar\n", (atual.select == 2) ? "->" : "  ");
         printf(" %s Remover\n", (atual.select == 3) ? "->" : "  ");
         printf(" %s Editar\n", (atual.select == 4) ? "->" : "  ");
-        printf(" %s Sair\n", (atual.select == 5) ? "->" : "  ");
+        printf(" %s Listar\n", (atual.select == 5) ? "->" : "  ");
+        printf(" %s Sair\n", (atual.select == 6) ? "->" : "  ");
 
-        Opcoes(5);
+        Opcoes(6);
 
         if(atual.key == ENTER)
             break;
@@ -754,9 +783,45 @@ void menuPrincipal(){
         Editar();
         break;
     case 5:
+        Listar();
+        break;
+    case 6:
         return 0;
     }
 
+}
+void Listar(){
+    atual.select = 1;
+    limparTela;
+
+    while (1)
+    {
+        puts("");
+        printf(" %s Listar Casas\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Listar Apartamentos\n", (atual.select == 2) ? "->" : "  ");
+        printf(" %s Listar Terreno\n", (atual.select == 3) ? "->" : "  ");
+        printf(" %s Voltar\n", (atual.select == 4) ? "->" : "  ");
+        Opcoes(4);
+        if(atual.key == ENTER)
+            break;
+    }
+
+    switch(atual.select){
+
+    case 1:
+        ListarImoveisCasa();
+        break;
+    case 2:
+        ListarImoveisAp();
+        break;
+    case 3:
+        ListarImoveisTerreno();
+        break;
+    case 4:
+        menuPrincipal();
+        break;
+
+    }
 }
 
 void Cadastrar(){
@@ -1075,7 +1140,7 @@ void SelecionaValor(){
     }
 
     switch(atual.select){
-  
+
     case 1:
         BuscarPeloPrecoCasa();
         break;
@@ -1177,6 +1242,7 @@ void RepetirOperacao(){
     case 2:
         return 0;
     }
+
 }
 
 int main(void){
