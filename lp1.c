@@ -1,3 +1,19 @@
+/*
+
+Projeto da Disciplina de Laboratório de Linguagem de Programação I
+
+    Autores: Yasmin Kely Lucena de Medeiros
+             Raissa da Silva Vieira
+             Mayra Cabral Amaral
+
+    Objetivo: Programa que gerencia imóveis de uma imobiliária.
+
+    Entrada: A seleção de acordo com os menus e os imóveis cadastrados no arquivo de texto.
+
+    Saída: Arquivo que salva todos os imóveis cadastrados.
+
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <locale.h>
@@ -9,7 +25,13 @@
 #define UP 72
 #define DOWN 80
 #define ENTER 13
-setlocale(LC_ALL, "Portuguese");
+
+//Galeria de estruturas I:
+
+/*
+ geral: [Atributos comuns à todos os tipos de imóveis]
+
+*/
 
 typedef struct{
     char nomerua[100], bairro[100], cidade[100], cep[15];
@@ -17,11 +39,21 @@ typedef struct{
     float valor;
 }geral;
 
+/*
+ informacoesc: [Atributos comuns a todos os imoveis, com uma variável do tipo geral, e atributos únicos referentes ao tipo casa.]
+
+*/
+
 typedef struct {
     geral casa;
     char titulo[100], tipo[100];
     int numquart, numpav, areat, areac;
 }informacoesc;
+
+/*
+ informacoest: [Atributos comuns a todos os imoveis, com uma variável do tipo geral, e atributos únicos referentes ao tipo terreno.]
+
+*/
 
 typedef struct{
     geral geral;
@@ -29,20 +61,188 @@ typedef struct{
     char titulo[100], tipo[100];
 }informacoest;
 
+/*
+ informacoesa: [Atributos comuns a todos os imoveis, com uma variável do tipo geral, e atributos únicos referentes ao tipo apartamente.]
+
+*/
+
 typedef struct {
     geral ap;
     char titulo[100], tipo[100];
     int numquart, numpav, areaAp;
 }informacoesa;
 
+/*
+    Arrays de cada tipo, no qual será armazenado os imóveis cadastrados.
+*/
+
 informacoesc cadcasa[1000];
 informacoest cadterreno[1000];
 informacoesa cadap[1000];
+
+/*
+    Números de identificação para cada tipo de imóvel.
+*/
 
 int iTerreno = 0;
 int iCasa=0;
 int iApartamento=0;
 
+//Galeria de Funções I:
+
+/*
+    ArquivoCasa(): [Função que salva todas as casas cadastradas no arquivo Casa.txt.]
+
+*/
+
+void ArquivoCasa(){
+
+    FILE *fp;
+
+    fp = fopen("Casa.txt", "w");
+
+    if (fp==NULL){
+        printf("Erro ao abrir o arquivo\n");
+        RepetirOperacao();
+    }
+    for (int i = 0; i<iCasa; i++){
+        printf("Salvando casa no arquivo.\n");
+        fwrite(&cadcasa[i], sizeof(informacoesc), 1, fp);
+    }
+
+    fclose(fp);
+
+    return 0;
+}
+/*
+    ArquivoTerreno(): [Função que salva todos os terretos cadastradas no arquivo Terreno.txt.]
+
+*/
+void ArquivoTerreno(){
+
+    FILE *fp;
+
+    fp = fopen("Terreno.txt", "w");
+
+    if (!fp){
+        printf("Erro ao abrir o arquivo\n");
+        RepetirOperacao();
+    }
+    for (int i = 0; i<iTerreno; i++){
+        printf("Salvando terreno no arquivo.\n");
+        fwrite(&cadterreno[i], sizeof(informacoest), 1, fp);
+    }
+
+    fclose(fp);
+    return 0;
+
+}
+/*
+    ArquivoApartamento(): [Função que salva todos os apartamentos cadastradas no arquivo Apartamento.txt.]
+
+*/
+
+void ArquivoApartamento(){
+
+    FILE *fp;
+
+    fp = fopen("Apartamento.txt", "w");
+
+    if (!fp){
+        printf("Erro ao abrir o arquivo\n");
+
+    }
+    for (int i = 0; i<iApartamento; i++){
+        printf("Salvando apartamento no arquivo.\n");
+        fwrite(&cadap[i], sizeof(informacoesa), 1, fp);
+    }
+
+    fclose(fp);
+    return 0;
+}
+/*
+    LerApartamentoArquivo(): [Função que cadastra todos os apartamentos advindos do arquivo Apartamento.txt.]
+
+*/
+
+void LerApartamentoArquivo(){
+
+    int i = 0;
+    FILE *fp;
+
+    fp=fopen("Apartamento.txt", "r");
+
+    if (!fp){
+        printf("Erro ao abrir o arquivo\n");
+
+    }
+    while((!feof(fp)) && (i <= 1000)){
+        fread(&cadap[i], sizeof(informacoesa), 1, fp);
+        i++;
+    }
+    iApartamento = i - 1;
+    fclose(fp);
+}
+
+/*
+    LerTerrenoArquivo(): [Função que cadastra todos os terrenos advindos do arquivo Terreno.txt.]
+
+*/
+
+void LerTerrenoArquivo(){
+
+    int i = 0;
+    FILE *fp;
+
+    fp=fopen("Terreno.txt", "r");
+
+    printf("Lendo do arquivo - iterreno = %i \n", iTerreno);
+
+    if (!fp){
+        printf("Erro ao abrir o arquivo\n");
+
+    }
+
+    while((!feof(fp)) && (i <= 1000)){
+        fread(&cadterreno[i], sizeof(informacoest), 1, fp);
+
+        i++;
+    }
+    iTerreno = i - 1;
+
+    fclose(fp);
+}
+
+/*
+    LerCasaArquivo(): [Função que cadastra todas as casas advindas do arquivo Casa.txt.]
+
+*/
+
+void LerCasaArquivo(){
+
+    FILE *fp;
+    int i = 0;
+
+    fp = fopen("Casa.txt", "r");
+
+    if (!fp){
+        printf("Erro ao abrir o arquivo\n");
+        RepetirOperacao();
+    }
+    while((!feof(fp)) && (i <= 1000)){
+        fread(&cadcasa[i], sizeof(informacoesc), 1, fp);
+        i++;
+    }
+    iCasa = i - 1;
+    fclose(fp);
+}
+
+/*
+ CaracteristicasTerreno(): [Função que printa as informações do terreno especificado pelo identificador do mesmo.]
+
+    Parâmetro:
+        iTerreno : [Identificador do terreno a ser printado na tela.]
+*/
 
 void CaracteristicasTerreno(int iTerreno){
     printf("Nome da rua: ");
@@ -53,11 +253,11 @@ void CaracteristicasTerreno(int iTerreno){
     printf("%s", cadterreno[iTerreno].geral.cidade);
     printf("CEP: ");
     printf("%s", cadterreno[iTerreno].geral.cep);
-    printf("NÃºmero: ");
+    printf("Numero: ");
     printf("%d\n", cadterreno[iTerreno].geral.numero);
-    printf("Ãrea do terreno: ");
+    printf("Area do terreno: ");
     printf("%d\n", cadterreno[iTerreno].area);
-    printf("Ti'tulo: ");
+    printf("Titulo: ");
     printf("%s", cadterreno[iTerreno].titulo);
     printf("Valor: ");
     printf("%.2f\n", cadterreno[iTerreno].geral.valor);
@@ -69,6 +269,13 @@ void CaracteristicasTerreno(int iTerreno){
 
 }
 
+/*
+ CaracteristicasCasa(): [Função que printa as informações da casa especificada pelo identificador da mesma.]
+
+    Parâmetro:
+        iCasa : [Identificador da casa a ser printada na tela.]
+*/
+
 void CaracteristicasCasa(int iCasa){
     printf("Nome da rua: ");
     printf("%s", cadcasa[iCasa].casa.nomerua);
@@ -78,32 +285,39 @@ void CaracteristicasCasa(int iCasa){
     printf("%s", cadcasa[iCasa].casa.cidade);
     printf("CEP: ");
     printf("%s", cadcasa[iCasa].casa.cep);
-    printf("Nu'mero: ");
+    printf("Numero: ");
     printf("%d\n", cadcasa[iCasa].casa.numero);
-    printf("Nu'mero de pavimentos: ");
+    printf("Numero de pavimentos: ");
     printf("%d\n", cadcasa[iCasa].numpav);
-    printf("Nu'mero de quartos: ");
-    printf("%d", cadcasa[iCasa].numquart);
+    printf("Numero de quartos: ");
+    printf("%d\n", cadcasa[iCasa].numquart);
     printf("Area do terreno: ");
     printf("%d\n", cadcasa[iCasa].areat);
     printf("Area construida: ");
     printf("%d\n", cadcasa[iCasa].areac);
-    printf("Ti'tulo: ");
+    printf("Titulo: ");
     printf("%s", cadcasa[iCasa].titulo);
     printf("Valor: ");
     printf("%.2f\n", cadcasa[iCasa].casa.valor);
     printf("Tipo de imovel: ");
-    printf("%s",cadcasa[iCasa].tipo);
+    printf("%s\n", cadcasa[iCasa].tipo);
     printf("\n");
     printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     printf("\n");
 }
 
-void CaracteristicasApartamento(){
+/*
+ CaracteristicasApartamento(): [Função que printa as informações do apartamento especificado pelo identificador do mesmo.]
+
+    Parâmetro:
+        iTerreno : [Identificador do apartamento a ser printado na tela.]
+*/
+
+void CaracteristicasApartamento(int iApartamento){
     printf("Nome da rua: ");
     printf("%s", cadap[iApartamento].ap.nomerua);
     printf("Numero: ");
-    printf("%d", cadap[iApartamento].ap.numero);
+    printf("%d\n", cadap[iApartamento].ap.numero);
     printf("Bairro: ");
     printf("%s", cadap[iApartamento].ap.bairro);
     printf("Cidade: ");
@@ -111,19 +325,26 @@ void CaracteristicasApartamento(){
     printf("CEP: ");
     printf("%s", cadap[iApartamento].ap.cep);
     printf("Quantidade de quartos: ");
-    printf("%d", cadap[iApartamento].numquart);
+    printf("%d\n", cadap[iApartamento].numquart);
     printf("Quantidade de pavimentos: ");
-    printf("%d", cadap[iApartamento].numpav);
+    printf("%d\n", cadap[iApartamento].numpav);
     printf("Area: ");
-    printf("%d", cadap[iApartamento].areaAp);
-    printf("PreÃ§o: ");
-    printf("%f", cadap[iApartamento].ap.valor);
+    printf("%d\n", cadap[iApartamento].areaAp);
+    printf("Preco: ");
+    printf("%f\n", cadap[iApartamento].ap.valor);
     printf("Titulo: ");
     printf("%s", cadap[iApartamento].titulo);
     printf("Tipo de imovel: [aluguel / venda]");
     printf("%s", cadap[iApartamento].tipo);
-
+    printf("\n");
+    printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+    printf("\n");
 }
+
+/*
+ VendaTerreno(): [Função que printa todos os terrenos que estão disponíveis para venda.]
+*/
+
 void VendaTerreno(){
     for(int j=0; j<=iTerreno; j++){
         if(strcmp("venda", cadterreno[j].tipo) == 0){
@@ -132,6 +353,10 @@ void VendaTerreno(){
     }
     RepetirOperacao();
 }
+
+/*
+ VendaApartamento(): [Função que printa todos os apartamentos que estão disponíveis para venda.]
+*/
 
 void VendaApartamento(){
     for(int j=0; j<=iApartamento; j++){
@@ -142,6 +367,10 @@ void VendaApartamento(){
     RepetirOperacao();
 }
 
+/*
+ VendaCasa(): [Função que printa todos as casas que estão disponíveis para venda.]
+*/
+
 void VendaCasa(){
     for(int j=0; j<=iCasa; j++){
         if(strcmp("venda", cadcasa[j].tipo) == 0){
@@ -151,32 +380,48 @@ void VendaCasa(){
     RepetirOperacao();
 }
 
+/*
+ AlugaTerreno(): [Função que printa todos os terrenos que estão disponíveis para aluguel.]
+*/
+
 void AlugaTerreno(){
     for(int j=0; j<=iTerreno; j++){
-        if(strcmp("aluga", cadterreno[j].tipo) == 0){
+        if(strcmp("aluguel", cadterreno[j].tipo) == 0){
             CaracteristicasTerreno(j);
         }
     }
     RepetirOperacao();
 }
 
+/*
+ AlugaApartamento(): [Função que printa todos os apartamentos que estão disponíveis para aluguel.]
+*/
+
 void AlugaApartamento(){
     for(int j=0; j<=iApartamento; j++){
-        if(strcmp("aluga", cadap[j].tipo) == 0){
+        if(strcmp("aluguel", cadap[j].tipo) == 0){
             CaracteristicasApartamento(j);
         }
     }
     RepetirOperacao();
 }
 
+/*
+ AluguelCasa(): [Função que printa todos as casas que estão disponíveis para aluguel.]
+*/
+
 void AlugaCasa(){
     for(int j=0; j<=iCasa; j++){
-        if(strcmp("aluga", cadcasa[j].tipo) == 0){
+        if(strcmp("aluguel", cadcasa[j].tipo) == 0){
             CaracteristicasCasa(j);
         }
     }
     RepetirOperacao();
 }
+
+/*
+ TituloCasa(): [Função que printa todos as casas que estão anunciadas com o título digitado pelo usuário.]
+*/
 
 void TituloCasa(){
 
@@ -194,6 +439,10 @@ void TituloCasa(){
     RepetirOperacao();
 }
 
+/*
+ TituloApartamento(): [Função que printa todos os apartamentos que estão anunciados com o título digitado pelo usuário.]
+*/
+
 void TituloApartamento(){
 
     char titulo1[100];
@@ -209,6 +458,10 @@ void TituloApartamento(){
     }
     RepetirOperacao();
 }
+
+/*
+ TituloTerreno(): [Função que printa todos os terrenos que estão anunciados com o título digitado pelo usuário.]
+*/
 
 void TituloTerreno(){
 
@@ -226,6 +479,10 @@ void TituloTerreno(){
     RepetirOperacao();
 }
 
+/*
+ BairroCasa(): [Função que printa todos as casas que estão localizadas no bairro digitado pelo usuário.]
+*/
+
 void BairroCasa(){
 
     char bairro1[100];
@@ -241,6 +498,10 @@ void BairroCasa(){
     }
     RepetirOperacao();
 }
+
+/*
+ BairroApartamento(): [Função que printa todos os apartamentos que estão localizados no bairro digitado pelo usuário.]
+*/
 
 void BairroApartamento(){
 
@@ -258,6 +519,10 @@ void BairroApartamento(){
     RepetirOperacao();
 }
 
+/*
+ BairroTerreno(): [Função que printa todos os terrenos que estão localizados no bairro digitado pelo usuário.]
+*/
+
 void BairroTerreno(){
 
     char bairro1[100];
@@ -274,16 +539,128 @@ void BairroTerreno(){
     RepetirOperacao();
 }
 
-void RemoverTerreno( informacoest cadterreno[]) {
-    printf("Lista de Terrenos/n");
+/*
+ BuscarpeloPrecoAp(): [Função que printa todos os apartamentos que estão estipulados pelo valor acima do especificado pelo usuário.]
+*/
 
-    for(int i=0;i<=iTerreno;i++){
-        printf("\nTerreno %d:", i+1);
+void BuscarPeloPrecoAp(){
+
+    float precoParaBuscar;
+    int i;
+
+    printf("Digite o valor a ser buscado: ");
+    scanf("%f", &precoParaBuscar);
+    printf("\n");
+
+        for(i = 0; i < iApartamento; i++){
+
+            if(cadap[i].ap.valor  >= precoParaBuscar){
+                CaracteristicasApartamento(i);
+            }
+        }
+
+        RepetirOperacao();
+}
+
+/*
+ BuscarpeloPrecoCasa(): [Função que printa todos as casas que estão estipuladas pelo valor acima do especificado pelo usuário.]
+*/
+
+void BuscarPeloPrecoCasa(){
+
+    float precoParaBuscar;
+    int i;
+
+    printf("Digite o valor a ser buscado: ");
+    scanf("%f", &precoParaBuscar);
+    printf("\n");
+
+        for(i = 0; i < iCasa; i++){
+
+            if(cadcasa[i].casa.valor >= precoParaBuscar){
+                CaracteristicasCasa(i);
+            }
+        }
+        RepetirOperacao();
+}
+
+/*
+ BuscarpeloPrecoTerreno(): [Função que printa todos os terrenos que estão estipulados pelo valor acima do especificado pelo usuário.]
+*/
+
+void BuscarPeloPrecoTerreno(){
+
+    float precoParaBuscar;
+    int i;
+
+    printf("Digite o valor a ser buscado: ");
+    scanf("%f", &precoParaBuscar);
+    printf("\n");
+
+        for(i = 0; i < iTerreno; i++){
+
+            if(cadterreno[i].geral.valor >= precoParaBuscar){
+                CaracteristicasTerreno(i);
+            }
+        }
+    RepetirOperacao();
+}
+
+/*
+ ListarImoveisAp(): [Função que printa todos os apartamentos cadastrados.]
+*/
+
+void ListarImoveisAp(){
+    int i;
+
+    for(i = 0; i < iApartamento; i++){
+        CaracteristicasApartamento(i);
+    }
+    RepetirOperacao();
+}
+
+/*
+ ListarImoveisCasa(): [Função que printa todas as casas cadastradas.]
+*/
+
+void ListarImoveisCasa(){
+    int i;
+
+    for(i = 0; i < iCasa; i++){
+        CaracteristicasCasa(i);
+    }
+    RepetirOperacao();
+}
+
+/*
+ ListarImoveisTerreno(): [Função que printa todos os terrenos cadastrados.]
+*/
+
+void ListarImoveisTerreno(){
+    int i;
+
+    for(i = 0; i < iTerreno; i++){
+        CaracteristicasTerreno(i);
+    }
+    RepetirOperacao();
+}
+
+/*
+ RemoverTerreno(): [Função que remove o terreno especificado pelo usuário.]
+    Parâmetro:
+        cadterreno[] : [Array que carrega todos os terrenos cadastrados.]
+*/
+
+void RemoverTerreno( informacoest cadterreno[]) {
+    printf("Lista de Terrenos\n");
+
+    for(int i=0;i<iTerreno;i++){
+        printf("\nTerreno %d: \n", i+1);
         CaracteristicasTerreno(i);
     }
 
     int j;
-    printf("Digite o Ã­ndice do terreno que deseja remover: ");
+    printf("Digite o indice do terreno que deseja remover: ");
     scanf("%d", j);
 
     j--;
@@ -295,16 +672,24 @@ void RemoverTerreno( informacoest cadterreno[]) {
     iTerreno--;
     RepetirOperacao();
 }
-void RemoverCasa(informacoesc cadcasa[]) {
-    printf("Lista de Casas/n");
 
-    for(int i=0;i<=iCasa;i++){
-        printf("\nCasa %d:", i+1),
+/*
+ RemoverCasa(): [Função que remove a casa especificada pelo usuário.]
+     Parâmetro:
+        cadcasa[] : [Array que carrega todas as casas cadastradas.]
+
+*/
+
+void RemoverCasa(informacoesc cadcasa[]) {
+    printf("Lista de Casas\n");
+
+    for(int i=0;i<iCasa;i++){
+        printf("\nCasa %d: \n", i+1),
         CaracteristicasCasa(i);
     }
 
     int j;
-    printf("Digite o Ã­ndice do terreno que deseja remover: ");
+    printf("Digite o indice do casa que deseja remover: ");
     scanf("%d", &j);
 
     j--;
@@ -317,16 +702,22 @@ void RemoverCasa(informacoesc cadcasa[]) {
     RepetirOperacao();
 }
 
-void RemoverAp(informacoesc cadap[]) {
-    printf("Lista de Apartamentos/n");
+/*
+ RemoverAp(): [Função que remove o apartamento especificado pelo usuário.]
+     Parâmetro:
+        cadap[] : [Array que carrega todos os apartamentos cadastrados.]
+*/
 
-    for(int i=0;i<=iApartamento;i++){
-        printf("\nApartamento %d:", i+1),
+void RemoverAp(informacoesc cadap[]) {
+    printf("Lista de Apartamentos\n");
+
+    for(int i=0; i<iApartamento; i++){
+        printf("\nApartamento %d: \n", i+1),
         CaracteristicasApartamento(i);
     }
 
     int j;
-    printf("Digite o Ã­ndice do terreno que deseja remover: ");
+    printf("Digite o indice do casa que deseja remover: ");
     scanf("%d", j);
 
     j--;
@@ -339,152 +730,276 @@ void RemoverAp(informacoesc cadap[]) {
     RepetirOperacao();
 
 }
+/*
+ EditarCasa(): [Função que edita a casa especificada pelo usuário.]
+     Parâmetro:
+        cadcasa[] : [Array que carrega todas as casas cadastradas.]
+
+*/
+void EditarCasa(informacoesc cadcasa[]){
+    printf("Lista de Casa\n");
+    for(int i=0;i<iCasa;i++){
+            printf("\nCasa %d: ", i+1);
+            printf("\n");
+            CaracteristicasCasa(i);
+            printf("\n");
+    }
+    int j;
+    printf("Digite o numero da casa, a qual você deseja editar: ");
+    scanf("%d%*c",&j);
+    j--;
+    printf("\t\tEDITAR CASA(S)\n");
+
+    printf("Nome da rua: ");
+    fgets(cadcasa[j].casa.nomerua, 100, stdin);
+    printf("Nome do bairro: ");
+    fgets(cadcasa[j].casa.bairro, 100, stdin);
+    printf("Nome da cidade: ");
+    fgets(cadcasa[j].casa.cidade, 100, stdin);
+    printf("CEP: ");
+    fgets(cadcasa[j].casa.cep, 100, stdin);
+    printf("Numero: ");
+    scanf("%d", &cadcasa[j].casa.numero);
+    printf("Numero de pavimentos: ");
+    scanf("%d", &cadcasa[j].numpav);
+    printf("Numero de quartos: ");
+    scanf("%d", &cadcasa[j].numquart);
+    printf("Area do terreno: ");
+    scanf("%d", &cadcasa[j].areat);
+    printf("Area construida: ");
+    scanf("%d%*c", &cadcasa[j].areac);
+    printf("Titulo: ");
+    fgets(cadcasa[j].titulo, 100, stdin);
+    printf("Valor: ");
+    scanf("%f%*c", &cadcasa[j].casa.valor);
+    printf("Tipo de imovel: [aluguel / venda] ");
+    fgets(cadcasa[j].tipo, 100, stdin);
+    cadcasa[j].tipo[strlen(cadcasa[j].tipo)-1] = '\0';
+
+    RepetirOperacao();
+}
+
+/*
+ EditarApartamento(): [Função que edita o apartamento especificado pelo usuário.]
+     Parâmetro:
+        cadap[] : [Array que carrega todos os apartamento cadastrados.]
+
+*/
 
 void EditarApartamento(informacoesa cadap[]){
-    printf("Lista de Casa/n");
-    for(int i=0;i<=iCasa;i++){
-        printf("\nCasa %d:", i+1),
-        CaracteristicasCasa(i);
+    printf("Lista de Apartamentos\n");
+    for(int i=0;i<iApartamento;i++){
+            printf("\nApartamento %d: ", i+1);
+            printf("\n");
+            CaracteristicasApartamento(i);
+            printf("\n");
     }
     int j;
-    printf("Digite o casa, o qual vocÃª deseja editar:");
-    scanf("%d",&j);
+    printf("Digite o numero do Apartamento, o qual você deseja editar: ");
+    scanf("%d%*c",&j);
     j--;
-    CadastroCasa(j);
+
+    printf("\t\tEDITAR APARTAMENTO(S)\n");
+
+    printf("Nome da rua: ");
+    fgets(cadap[j].ap.nomerua, 100, stdin);
+    printf("Numero: ");
+    scanf("%i%*c", &cadap[j].ap.numero);
+    printf("Bairro: ");
+    fgets(cadap[j].ap.bairro, 100, stdin);
+    printf("Cidade: ");
+    fgets(cadap[j].ap.cidade, 100, stdin);
+    printf("CEP: ");
+    fgets(cadap[j].ap.cep, 15, stdin);
+    printf("Quantidade de quartos: ");
+    scanf("%i%*c", &cadap[j].numquart);
+    printf("Quantidade de pavimentos: ");
+    scanf("%i%*c", &cadap[j].numpav);
+    printf("Area: ");
+    scanf("%i%*c", &cadap[j].areaAp);
+    printf("Digite o preco: ");
+    scanf("%f%*c", &cadap[j].ap.valor);
+    printf("Digite o titulo: ");
+    fgets(cadap[j].titulo, 100, stdin);
+    printf("Tipo de imovel: [aluguel / venda] ");
+    fgets(cadap[j].tipo, 100, stdin);
+    cadap[j].tipo[strlen(cadap[j].tipo)-1] = '\0';
+
     RepetirOperacao();
 }
 
-void EditarCasa(informacoesc cadcasa[]){
-    printf("Lista de Apartamentos/n");
-    for(int i=0;i<=iApartamento;i++){
-        printf("\nApartamento %d:", i+1),
-        CaracteristicasApartamento(i);
-    }
-    int j;
-    printf("Digite o apartamento, o qual vocÃª deseja editar:");
-    scanf("%d",&j);
-    j--;
-    CadastroApartamento(j);
-    RepetirOperacao();
+/*
+ EditarTerreno(): [Função que edita o terreno especificado pelo usuário.]
+     Parâmetro:
+        cadterreno[] : [Array que carrega todos os terrenos cadastrados.]
 
-}
+*/
 
 void EditarTerreno(informacoest cadterreno[]){
-    printf("Lista de Terreno/n");
-    for(int i=0;i<=iTerreno;i++){
-        printf("\nTerreno %d:", i+1),
-        CaracteristicasTerreno(i);
+    printf("Lista de Terreno\n");
+    for(int i=0;i<iTerreno;i++){
+            printf("\nTerreno %d: ", i+1);
+            printf("\n");
+            CaracteristicasTerreno(i);
+            printf("\n");
     }
     int j;
-    printf("Digite o terreno, o qual vocÃª deseja editar:");
-    scanf("%d",&j);
+    printf("Digite o terreno, o qual você deseja editar: ");
+    scanf("%d%*c",&j);
     j--;
-    CadastroTerreno(j);
-    RepetirOperacao();
 
+    printf("\t\tEDITAR TERRENO(S)\n");
+
+    printf("Nome da cidade: ");
+    fgets(cadterreno[j].geral.cidade, 100, stdin);
+    printf("Numero do CEP: ");
+    fgets(cadterreno[j].geral.cep, 100, stdin);
+    printf("Nome do bairro: ");
+    fgets(cadterreno[j].geral.bairro, 100, stdin);
+    printf("Nome da rua: ");
+    fgets(cadterreno[j].geral.nomerua, 100, stdin);
+    printf("Numero do terreno: ");
+    scanf("%d%*c", &cadterreno[j].geral.numero);
+    printf("Area do Terreno: ");
+    scanf("%d%*c", &cadterreno[j].area);
+    printf("Valor do Terreno: ");
+    scanf("%f%*c", &cadterreno[j].geral.valor);
+    printf("Titulo: ");
+    fgets(cadterreno[j].titulo, 100, stdin);
+    printf("Tipo de imovel: [aluguel / venda] ");
+    fgets(cadterreno[j].tipo, 100, stdin);
+    cadterreno[j].tipo[strlen(cadterreno[j].tipo)-1] = '\0';
+
+    RepetirOperacao();
 }
 
+/*
+ CadastroTerreno(): [Função que cadastra terrenos.]
+ Parâmetro:
+        pos : [Identificador do terreno a ser cadastrado.]
+*/
 
-void CadastroTerreno(){
+void CadastroTerreno(int pos){
 
     printf("\t\tCADASTRO DE TERRENO(S)\n");
 
     printf("Nome da cidade: ");
-    fgets(cadterreno[iTerreno].geral.cidade, 100, stdin);
-    printf("Nï¿½mero do CEP: ");
-    fgets(cadterreno[iTerreno].geral.cep, 100, stdin);
+    fgets(cadterreno[pos].geral.cidade, 100, stdin);
+    printf("Numero do CEP: ");
+    fgets(cadterreno[pos].geral.cep, 100, stdin);
     printf("Nome do bairro: ");
-    fgets(cadterreno[iTerreno].geral.bairro, 100, stdin);
+    fgets(cadterreno[pos].geral.bairro, 100, stdin);
     printf("Nome da rua: ");
-    fgets(cadterreno[iTerreno].geral.nomerua, 100, stdin);
-    printf("Nï¿½mero da terreno: ");
-    scanf("%d%*c", &cadterreno[iTerreno].geral.numero);
-    printf("ï¿½rea do Terreno: ");
-    scanf("%d%*c", &cadterreno[iTerreno].area);
-    printf("ï¿½rea do Terreno: ");
-    scanf("%f%*c", &cadterreno[iTerreno].geral.valor);
-    printf("TÃ­tulo: ");
-    fgets(cadterreno[iTerreno].titulo, 100, stdin);
+    fgets(cadterreno[pos].geral.nomerua, 100, stdin);
+    printf("Numero do terreno: ");
+    scanf("%d%*c", &cadterreno[pos].geral.numero);
+    printf("Area do Terreno: ");
+    scanf("%d%*c", &cadterreno[pos].area);
+    printf("Valor do Terreno: ");
+    scanf("%f%*c", &cadterreno[pos].geral.valor);
+    printf("Titulo: ");
+    fgets(cadterreno[pos].titulo, 100, stdin);
     printf("Tipo de imovel: [aluguel / venda] ");
-    fgets(cadterreno[iTerreno].tipo, 100, stdin);
-    cadterreno[iTerreno].tipo[strlen(cadterreno[iTerreno].tipo)-1] = '\0';
+    fgets(cadterreno[pos].tipo, 100, stdin);
+    cadterreno[pos].tipo[strlen(cadterreno[pos].tipo)-1] = '\0';
+
     iTerreno++;
+
     RepetirOperacao();
 }
 
-void CadastroCasa(){
+/*
+ CadastroCasa(): [Função que cadastra casas.]
+ Parâmetro:
+        pos : [Identificador da casa a ser cadastrada.]
+*/
+
+void CadastroCasa(int pos){
 
     printf("\t\tCADASTRO DE CASA(S)\n");
 
     printf("Nome da rua: ");
-    fgets(cadcasa[iCasa].casa.nomerua, 100, stdin);
+    fgets(cadcasa[pos].casa.nomerua, 100, stdin);
     printf("Nome do bairro: ");
-    fgets(cadcasa[iCasa].casa.bairro, 100, stdin);
+    fgets(cadcasa[pos].casa.bairro, 100, stdin);
     printf("Nome da cidade: ");
-    fgets(cadcasa[iCasa].casa.cidade, 100, stdin);
+    fgets(cadcasa[pos].casa.cidade, 100, stdin);
     printf("CEP: ");
-    fgets(cadcasa[iCasa].casa.cep, 100, stdin);
-    printf("Nu'mero: ");
-    scanf("%d", &cadcasa[iCasa].casa.numero);
-    printf("Nu'mero de pavimentos: ");
-    scanf("%d", &cadcasa[iCasa].numpav);
-    printf("Nu'mero de quartos: ");
-    scanf("%d", &cadcasa[iCasa].numquart);
+    fgets(cadcasa[pos].casa.cep, 100, stdin);
+    printf("Numero: ");
+    scanf("%d", &cadcasa[pos].casa.numero);
+    printf("Numero de pavimentos: ");
+    scanf("%d", &cadcasa[pos].numpav);
+    printf("Numero de quartos: ");
+    scanf("%d", &cadcasa[pos].numquart);
     printf("Area do terreno: ");
-    scanf("%d", &cadcasa[iCasa].areat);
+    scanf("%d", &cadcasa[pos].areat);
     printf("Area construida: ");
-    scanf("%d%*c", &cadcasa[iCasa].areac);
-    printf("Ti'tulo: ");
-    fgets(cadcasa[iCasa].titulo, 100, stdin);
+    scanf("%d%*c", &cadcasa[pos].areac);
+    printf("Titulo: ");
+    fgets(cadcasa[pos].titulo, 100, stdin);
     printf("Valor: ");
-    scanf("%f%*c", &cadcasa[iCasa].casa.valor);
+    scanf("%f%*c", &cadcasa[pos].casa.valor);
     printf("Tipo de imovel: [aluguel / venda] ");
-    fgets(cadcasa[iCasa].tipo, 100, stdin);
-    cadcasa[iCasa].tipo[strlen(cadcasa[iCasa].tipo)-1] = '\0';
+    fgets(cadcasa[pos].tipo, 100, stdin);
+    cadcasa[pos].tipo[strlen(cadcasa[pos].tipo)-1] = '\0';
     iCasa++;
     limparTela;
     RepetirOperacao();
 }
 
-void CadastroApartamento(){
+/*
+ CadastroApartamento(): [Função que cadastra apartamentos.]
+ Parâmetro:
+        pos : [Identificador do apartamento a ser cadastrado.]
+*/
+
+void CadastroApartamento(int pos){
 
     printf("\t\tCADASTRO DE APARTAMENTO(S)\n");
 
     printf("Nome da rua: ");
-    fgets(cadap[iApartamento].ap.nomerua, 100, stdin);
+    fgets(cadap[pos].ap.nomerua, 100, stdin);
     printf("Numero: ");
-    scanf("%i%*c", &cadap[iApartamento].ap.numero);
+    scanf("%i%*c", &cadap[pos].ap.numero);
     printf("Bairro: ");
-    fgets(cadap[iApartamento].ap.bairro, 100, stdin);
+    fgets(cadap[pos].ap.bairro, 100, stdin);
     printf("Cidade: ");
-    fgets(cadap[iApartamento].ap.cidade, 100, stdin);
+    fgets(cadap[pos].ap.cidade, 100, stdin);
     printf("CEP: ");
-    fgets(cadap[iApartamento].ap.cep, 15, stdin);
+    fgets(cadap[pos].ap.cep, 15, stdin);
     printf("Quantidade de quartos: ");
-    scanf("%i%*c", &cadap[iApartamento].numquart);
+    scanf("%i%*c", &cadap[pos].numquart);
     printf("Quantidade de pavimentos: ");
-    scanf("%i%*c", &cadap[iApartamento].numpav);
+    scanf("%i%*c", &cadap[pos].numpav);
     printf("Area: ");
-    scanf("%i%*c", &cadap[iApartamento].areaAp);
-    printf("Digite o preÃ§o: ");
-    scanf("%f%*c", &cadap[iApartamento].ap.valor);
+    scanf("%i%*c", &cadap[pos].areaAp);
+    printf("Digite o preco: ");
+    scanf("%f%*c", &cadap[pos].ap.valor);
     printf("Digite o titulo: ");
-    fgets(cadap[iApartamento].titulo, 100, stdin);
-    printf("Tipo de imovel: [aluguel / venda]");
-    cadcasa[iApartamento].tipo[strlen(cadap[iCasa].tipo)-1] = '\0';
-    fgets(cadap[iApartamento].tipo, 100, stdin);
+    fgets(cadap[pos].titulo, 100, stdin);
+    printf("Tipo de imovel: [aluguel / venda] ");
+    fgets(cadap[pos].tipo, 100, stdin);
+    cadap[pos].tipo[strlen(cadap[pos].tipo)-1] = '\0';
     iApartamento++;
     limparTela;
     RepetirOperacao();
 
 }
+//Galeria de Estruturas II
+
+/*
+ Opsetas:[Apresenta dois inteiros, sendo um responsável por guardar a posição da seta e o outro guarda a tecla que está sendo precionada pelo usuário.]
+*/
 
 typedef struct{
     int select;// SETA
     int key; // TECLA
 } OpSetas;
 
-OpSetas atual;
+OpSetas atual;// variável que cria a estrutura OPsetas e será utilizado em todo o manuseio do menu.
+
+//Galeria de Funções II:
 
 void Opcoes (int max){
     atual.key = getch();
@@ -495,46 +1010,43 @@ void Opcoes (int max){
     limparTela;
 }
 
-void menuPrincipal(){
+/* Listar() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser listado.] */
+
+void Listar(){
     atual.select = 1;
     limparTela;
 
     while (1)
     {
-        puts("----------MOBIL----------");
         puts("");
-        printf(" %s Cadastrar\n", (atual.select == 1) ? "->" : "  ");
-        printf(" %s Buscar\n", (atual.select == 2) ? "->" : "  ");
-        printf(" %s Remover\n", (atual.select == 3) ? "->" : "  ");
-        printf(" %s Editar\n", (atual.select == 4) ? "->" : "  ");
-        printf(" %s Sair\n", (atual.select == 5) ? "->" : "  ");
-
-        Opcoes(5);
-
+        printf(" %s Listar Casas\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Listar Apartamentos\n", (atual.select == 2) ? "->" : "  ");
+        printf(" %s Listar Terreno\n", (atual.select == 3) ? "->" : "  ");
+        printf(" %s Voltar\n", (atual.select == 4) ? "->" : "  ");
+        Opcoes(4);
         if(atual.key == ENTER)
             break;
-
     }
 
-    switch(atual.select)
-    {
+    switch(atual.select){
+
     case 1:
-        Cadastrar();
+        ListarImoveisCasa();
         break;
     case 2:
-        Buscar();
+        ListarImoveisAp();
         break;
-   case 3:
-        Remover();
+    case 3:
+        ListarImoveisTerreno();
         break;
     case 4:
-        Editar();
+        menuPrincipal();
         break;
-    case 5:
-        return 0;
-    }
 
+    }
 }
+
+/* Cadastrar() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser cadastrado.] */
 
 void Cadastrar(){
     atual.select = 1;
@@ -555,13 +1067,13 @@ void Cadastrar(){
     switch(atual.select){
 
     case 1:
-        SelecionaCasa();
+        CadastroCasa(iCasa);
         break;
     case 2:
-        SelecionaApartamento();
+        CadastroApartamento(iApartamento);
         break;
     case 3:
-        SelecionaTerreno();
+        CadastroTerreno(iTerreno);
         break;
 
     case 4:
@@ -570,96 +1082,9 @@ void Cadastrar(){
 
     }
 }
-void SelecionaCasa(){
-    atual.select = 1;
-    limparTela;
 
-    while (1)
-    {
-        puts("");
-        printf(" %s Cadastrar Casa por Arquivo\n", (atual.select == 1) ? "->" : "  ");
-        printf(" %s Cadastrar Casa por Teclado\n", (atual.select == 2) ? "->" : "  ");
-        printf(" %s Voltar\n", (atual.select == 3) ? "->" : "  ");
-        Opcoes(3);
-        if(atual.key == ENTER)
-            break;
-    }
+/* Remover() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser removido.] */
 
-    switch(atual.select){
-
-    case 1:
-        //CadastraCasaPorArquivo();
-        break;
-    case 2:
-        CadastroCasa();
-        break;
-
-    case 3:
-        Cadastrar();
-        break;
-
-    }
-}
-void SelecionaApartamento(){
-    atual.select = 1;
-    limparTela;
-
-    while (1)
-    {
-        puts("");
-        printf(" %s Cadastrar Apartamento por Arquivo\n", (atual.select == 1) ? "->" : "  ");
-        printf(" %s Cadastrar Apartamento por Teclado\n", (atual.select == 2) ? "->" : "  ");
-        printf(" %s Voltar\n", (atual.select == 3) ? "->" : "  ");
-        Opcoes(3);
-        if(atual.key == ENTER)
-            break;
-    }
-
-    switch(atual.select){
-
-    case 1:
-        //CadastraApartamentoPorArquivo();
-        break;
-    case 2:
-        CadastroApartamento();
-        break;
-
-    case 3:
-        Cadastrar();
-        break;
-
-    }
-}
-void SelecionaTerreno(){
-    atual.select = 1;
-    limparTela;
-
-    while (1)
-    {
-        puts("");
-        printf(" %s Cadastrar Terreno por Arquivo\n", (atual.select == 1) ? "->" : "  ");
-        printf(" %s Cadastrar Terreno por Teclado\n", (atual.select == 2) ? "->" : "  ");
-        printf(" %s Voltar\n", (atual.select == 3) ? "->" : "  ");
-        Opcoes(3);
-        if(atual.key == ENTER)
-            break;
-    }
-
-    switch(atual.select){
-
-    case 1:
-        //CadastraTerrenoPorArquivo();
-        break;
-    case 2:
-        CadastroTerreno();
-        break;
-
-    case 3:
-        Cadastrar();
-        break;
-
-    }
-}
 void Remover(){
     atual.select = 1;
     limparTela;
@@ -688,13 +1113,15 @@ void Remover(){
     case 3:
         RemoverTerreno(&cadterreno);
         break;
-
     case 4:
         menuPrincipal();
         break;
 
     }
 }
+
+/* Editar() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser editado.] */
+
 void Editar(){
     atual.select = 1;
     limparTela;
@@ -728,9 +1155,9 @@ void Editar(){
         break;
 
     }
-
-
 }
+
+/* Buscar() : [Funcao que sera chamada para o usuario escolher o tipo de busca a ser feita.] */
 
 void Buscar(){
     atual.select = 1;
@@ -739,11 +1166,11 @@ void Buscar(){
     while (1)
     {
         puts("");
-        printf(" %s Buscar por TÃ­tulo\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Buscar por Titulo\n", (atual.select == 1) ? "->" : "  ");
         printf(" %s Buscar por Bairro\n", (atual.select == 2) ? "->" : "  ");
         printf(" %s Buscar por Valor\n", (atual.select == 3) ? "->" : "  ");
-        printf(" %s Buscar ImÃ³vel para Venda\n", (atual.select == 4) ? "->" : "  ");
-        printf(" %s Buscar ImÃ³vel para LocaÃ§Ã£o\n", (atual.select == 5) ? "->" : "  ");
+        printf(" %s Buscar Imovel para Venda\n", (atual.select == 4) ? "->" : "  ");
+        printf(" %s Buscar Imovel para Locacao\n", (atual.select == 5) ? "->" : "  ");
         printf(" %s Voltar\n", (atual.select == 6) ? "->" : "  ");
 
         Opcoes(6);
@@ -770,6 +1197,9 @@ void Buscar(){
         break;
     }
 }
+
+/* SelecionaTitulo() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser procurado por titulo.] */
+
 void SelecionaTitulo(){
     atual.select = 1;
     limparTela;
@@ -777,9 +1207,9 @@ void SelecionaTitulo(){
     while (1)
     {
         puts("");
-        printf(" %s Buscar Casa por TÃ­tulo\n", (atual.select == 1) ? "->" : "  ");
-        printf(" %s Buscar Apartamento por TÃ­tulo\n", (atual.select == 2) ? "->" : "  ");
-        printf(" %s Buscar Terreno por TÃ­tulo\n", (atual.select == 3) ? "->" : "  ");
+        printf(" %s Buscar Casa por Titulo\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Buscar Apartamento por Titulo\n", (atual.select == 2) ? "->" : "  ");
+        printf(" %s Buscar Terreno por Titulo\n", (atual.select == 3) ? "->" : "  ");
         printf(" %s Voltar\n", (atual.select == 4) ? "->" : "  ");
         Opcoes(4);
         if(atual.key == ENTER)
@@ -802,6 +1232,9 @@ void SelecionaTitulo(){
         break;
     }
 }
+
+/* SelecionaBairro() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser procurado por bairro.] */
+
 void SelecionaBairro(){
     atual.select = 1;
     limparTela;
@@ -827,7 +1260,7 @@ void SelecionaBairro(){
         BairroApartamento();
         break;
     case 3:
-        BairroApartamento();
+        BairroTerreno();
         break;
 
     case 4:
@@ -835,6 +1268,9 @@ void SelecionaBairro(){
         break;
     }
 }
+
+/* SelecionaValor() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser procurado por valor.] */
+
 void SelecionaValor(){
     atual.select = 1;
     limparTela;
@@ -852,22 +1288,24 @@ void SelecionaValor(){
     }
 
     switch(atual.select){
-  /*
+
     case 1:
-        BuscaCasaporValor();
+        BuscarPeloPrecoCasa();
         break;
     case 2:
-        BuscaApartamentoporValor();
+        BuscarPeloPrecoAp();
         break;
     case 3:
-        BuscaTerrenoporValor();
+        BuscarPeloPrecoTerreno();
         break;
-    */
     case 4:
         Buscar();
         break;
     }
 }
+
+/* SelecionaTitulo() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser procurado para venda.] */
+
 void SelecionaVenda(){
     atual.select = 1;
     limparTela;
@@ -901,6 +1339,9 @@ void SelecionaVenda(){
         break;
     }
 }
+
+/* SelecionaLocacao() : [Funcao que sera chamada para o usuario escolher o tipo de imovel a ser procurado para aluguel.] */
+
 void SelecionaLocacao(){
     atual.select = 1;
     limparTela;
@@ -933,15 +1374,83 @@ void SelecionaLocacao(){
         break;
     }
 }
+
+/* SelecionaArquivo() : [Funcao que sera chamada para o usuario escolher onde será armazenada as
+                            informacoes digitadas por ele de acordo com o tipo de imovel.] */
+
+void SelecionaArquivo(){
+    atual.select = 1;
+    limparTela;
+
+    while (1)
+    {
+        puts("");
+        printf(" %s Salvar em Arquivo Casa(s)\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Salvar em Arquivo Apartamento(s)\n", (atual.select == 2) ? "->" : "  ");
+        printf(" %s Salvar em Arquivo Terreno(s)\n", (atual.select == 3) ? "->" : "  ");
+        printf(" %s Salvar Todos em Arquivo\n", (atual.select == 4) ? "->" : "  ");
+        Opcoes(4);
+        if(atual.key == ENTER)
+            break;
+    }
+
+    switch(atual.select){
+
+    case 1:
+        ArquivoCasa();
+        break;
+    case 2:
+        ArquivoApartamento();
+        break;
+    case 3:
+        ArquivoTerreno();
+        break;
+    case 4:
+        ArquivoApartamento();
+        ArquivoCasa();
+        ArquivoTerreno();
+        break;
+    }
+}
+
+/* SalvarArquivo() : [Funcao que sera chamada para o usuario dizer se quer armazenar ou nao as informacoes digitadas.] */
+
+void SalvarArquivo(){
+    atual.select = 1;
+    limparTela;
+
+    while (1)
+    {
+        puts("");
+        printf("Deseja salvar em arquivo?\n");
+        printf(" %s Sim\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Nao\n", (atual.select == 2) ? "->" : "  ");
+        Opcoes(2);
+        if(atual.key == ENTER)
+            break;
+    }
+
+    switch(atual.select){
+
+    case 1:
+        SelecionaArquivo();
+        break;
+    case 2:
+        return 0;
+    }
+}
+
+/* RepetirOperacao() : [Funcao que sera chamada para o usuario dizer se quer sair do programa ou realizar outras operacoes.] */
+
 void RepetirOperacao(){
     atual.select = 1;
 
     while (1)
     {
         puts("");
-        printf("Deseja Realizar Uma Nova OperaÃ§Ã£o?\n");
+        printf("Deseja Realizar Uma Nova Operacao?\n");
         printf(" %s Sim\n", (atual.select == 1) ? "->" : "  ");
-        printf(" %s NÃ£o\n", (atual.select == 2) ? "->" : "  ");
+        printf(" %s Nao\n", (atual.select == 2) ? "->" : "  ");
         Opcoes(2);
         if(atual.key == ENTER)
             break;
@@ -953,12 +1462,59 @@ void RepetirOperacao(){
         menuPrincipal();
         break;
     case 2:
-        return 0;
+        SalvarArquivo();
+    }
+
+}
+
+/* menuPrincipal() : [Apresenta todas as operacoes que podem ser realizadas pelos usuarios.] */
+
+void menuPrincipal(){
+    atual.select = 1;
+    limparTela;
+
+    while (1)
+    {
+        puts("----------MOBIL----------");
+        puts("");
+        printf(" %s Cadastrar\n", (atual.select == 1) ? "->" : "  ");
+        printf(" %s Buscar\n", (atual.select == 2) ? "->" : "  ");
+        printf(" %s Remover\n", (atual.select == 3) ? "->" : "  ");
+        printf(" %s Editar\n", (atual.select == 4) ? "->" : "  ");
+        printf(" %s Listar\n", (atual.select == 5) ? "->" : "  ");
+        printf(" %s Sair\n", (atual.select == 6) ? "->" : "  ");
+
+        Opcoes(6);
+
+        if(atual.key == ENTER)
+            break;
+    }
+    switch(atual.select)
+    {
+    case 1:
+        Cadastrar();
+        break;
+    case 2:
+        Buscar();
+        break;
+   case 3:
+        Remover();
+        break;
+    case 4:
+        Editar();
+        break;
+    case 5:
+        Listar();
+        break;
+    case 6:
+        SalvarArquivo();
     }
 }
 
 int main(void){
-
+    LerApartamentoArquivo();
+    LerCasaArquivo();
+    LerTerrenoArquivo();
     menuPrincipal();
     return 0;
 }
